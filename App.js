@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
     const [textState, setTextState] = useState('');
@@ -22,9 +22,15 @@ export default function App() {
                 <Button title='Click Me' onPress={handleClickButton} />
             </View>
             <View style={styles.bodyContainer}>
-                {
-                    allStates.map((state, index) => <Text style={[index % 2 === 0 ? styles.individualStyle : styles.individualStyle1, styles.commonStyle]} key={state}>{state}</Text>)
+                <FlatList alwaysBounceVertical={false} data={allStates} renderItem={() => {
+                    return(
+                        <View style={[index % 2 === 0 ? styles.individualStyle : styles.individualStyle1, styles.commonStyle]} key={state}>
+                            <Text style={styles.viewText}>{state}</Text>
+                        </View>
+                    )
                 }
+
+                } />
                 {/* <StatusBar style="auto" /> */}
             </View>
         </View>
@@ -67,6 +73,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textTransform: 'capitalize',
         fontWeight: 400,
+        borderRadius: 6,
+        marginVertical: 8,
     },
     individualStyle:{
         backgroundColor: 'orange',
@@ -74,4 +82,7 @@ const styles = StyleSheet.create({
     individualStyle1:{
         backgroundColor: '#cccccc',
     },
+    viewText:{
+        color:"#ffffff"
+    },  
 });
