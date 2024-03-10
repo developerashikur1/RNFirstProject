@@ -1,36 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import GoalInput from './components/GoalInput';
+import GoalItem from './components/GoalItem';
 
 export default function App() {
-    const [textState, setTextState] = useState('');
     const [allStates, setAllStates] = useState([]);
 
-    function handleTextInput (textFromInput) {
-        setTextState(textFromInput);
+    function handleClickButton(textState) {
+        setAllStates((currentState) => [...currentState, {text:textState, id:Math.random().toString()}]);
+    }
+    const handleDelete = (id) => {
+        setAllStates((currentState) => {
+            return currentState.filter((state) => state.id !== id);
+        })
     }
 
-    function handleClickButton () {
-        setAllStates((currentState) => [...currentState, textState]);
-    }
-    
-    console.log(allStates)
     return (
         <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <TextInput style={styles.textInput} placeholder='Search input' onChangeText={handleTextInput} />
-                <Button title='Click Me' onPress={handleClickButton} />
-            </View>
+            <GoalInput onPress={handleClickButton} />
             <View style={styles.bodyContainer}>
-                <FlatList alwaysBounceVertical={false} data={allStates} renderItem={() => {
-                    return(
-                        <View style={[index % 2 === 0 ? styles.individualStyle : styles.individualStyle1, styles.commonStyle]} key={state}>
-                            <Text style={styles.viewText}>{state}</Text>
-                        </View>
+                <FlatList alwaysBounceVertical={false} data={allStates} renderItem={(state) => {
+                    return (
+                       <GoalItem onDeletePress={handleDelete} id={state.item.id} text={state.item.text} index={state.index} />
                     )
-                }
+                }} keyExtractor={(item, index) => item.id} />
 
-                } />
                 {/* <StatusBar style="auto" /> */}
             </View>
         </View>
@@ -40,25 +34,9 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // minHeight: '100vh',
         color: '#fff',
-        // backgroundColor:"green",
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    textInput: {
-        borderWidth: 1,
-        borderRadius: 0,
-        padding: 2.5,
-        width: '70%',
-        marginRight: 8,
-    },
-    headerContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        // borderColor: 'red',
     },
     bodyContainer: {
         flex: 5,
@@ -66,23 +44,5 @@ const styles = StyleSheet.create({
         padding: 15,
         width: '100%',
         gap: 10,
-    },    
-    commonStyle:{
-        paddingVertical: 8,
-        paddingHorizontal: 10,
-        fontSize: 18,
-        textTransform: 'capitalize',
-        fontWeight: 400,
-        borderRadius: 6,
-        marginVertical: 8,
-    },
-    individualStyle:{
-        backgroundColor: 'orange',
-    },
-    individualStyle1:{
-        backgroundColor: '#cccccc',
-    },
-    viewText:{
-        color:"#ffffff"
-    },  
+    },   
 });
