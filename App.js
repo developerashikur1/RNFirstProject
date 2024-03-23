@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import GoalInput from './components/GoalInput';
 import GoalItem from './components/GoalItem';
 
 export default function App() {
     const [allStates, setAllStates] = useState([]);
+    const [isGoalInputOpen, setIsGoalInputOpen] = useState(false);
 
     function handleClickButton(textState) {
         setAllStates((currentState) => [...currentState, {text:textState, id:Math.random().toString()}]);
@@ -16,9 +17,17 @@ export default function App() {
         })
     }
 
+    const handlePressModal = () => {
+        setIsGoalInputOpen(true);
+    }
+
     return (
         <View style={styles.container}>
-            <GoalInput onPress={handleClickButton} />
+            {isGoalInputOpen && <GoalInput isOpenModal={isGoalInputOpen} setIsOpenModal={setIsGoalInputOpen} onPress={handleClickButton} />}
+            {/* <View> */}
+                <Button onPress={handlePressModal} color={"purple"} style={styles.modalButton} title='Add New Goal'>
+                </Button>
+            {/* </View> */}
             <View style={styles.bodyContainer}>
                 <FlatList alwaysBounceVertical={false} data={allStates} renderItem={(state) => {
                     return (
@@ -38,6 +47,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+        paddingTop: 80,
+        gap: 15,
     },
     bodyContainer: {
         flex: 5,
@@ -46,4 +57,5 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 10,
     },   
+
 });
