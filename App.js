@@ -9,6 +9,7 @@ export default function App() {
     function handleClickButton(textState) {
         setAllStates((currentState) => [...currentState, {text:textState, id:Math.random().toString()}]);
     }
+    
     const handleDelete = (id) => {
         setAllStates((currentState) => {
             return currentState.filter((state) => state.id !== id);
